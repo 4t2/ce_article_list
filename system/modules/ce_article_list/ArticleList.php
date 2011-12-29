@@ -142,7 +142,7 @@ class ArticleList extends ContentElement
 			SELECT
 				`id`,
 				`alias`,
-				`title`,
+				`pageTitle`,
 				`type`,
 				`hide`,
 				`protected`,
@@ -162,9 +162,10 @@ class ArticleList extends ContentElement
 				$arrInactiveModules = deserialize($GLOBALS['TL_CONFIG']['inactiveModules']);
 				
 				/**
-				 * fetch all columns if zArticleImage is installed and not inactive
+				 * fetch all columns if zArticleImage or teaserimages is installed and not inactive
 				 */
-				if (is_dir(TL_ROOT . '/system/modules/zArticleImage') && (!is_array($arrInactiveModules) || !in_array('zArticleImage', $arrInactiveModules)))
+				if ((is_dir(TL_ROOT . '/system/modules/zArticleImage') && (!is_array($arrInactiveModules) || !in_array('zArticleImage', $arrInactiveModules))) ||
+					(is_dir(TL_ROOT . '/system/modules/teaserimages') && (!is_array($arrInactiveModules) || !in_array('teaserimages', $arrInactiveModules))))
 				{
 					$sql = "SELECT * FROM tl_article WHERE " . (!$this->Input->cookie('FE_PREVIEW') ? "`published`='1' AND " : "") . " `pid`=? ORDER BY `sorting`";
 				}
@@ -202,7 +203,7 @@ class ArticleList extends ContentElement
 								}
 	
 								/**
-								 * Special handling for zArticleImage extension
+								 * Special handling for zArticleImage or teaserimages extension
 								 */
 								if ($objArticles->addImage && strlen($objArticles->singleSRC) && is_file(TL_ROOT . '/' . $objArticles->singleSRC))
 								{
@@ -224,7 +225,7 @@ class ArticleList extends ContentElement
 							}
 	
 							$pages[] = array(
-								'title' => $objPages->title,
+								'title' => $objPages->pageTitle,
 								'link' => $this->generateFrontendUrl($objPages->row()),
 								'articles' => $articles,
 								'level' => (isset($this->idLevels[$objPages->id]) ? $this->idLevels[$objPages->id] : 0),
@@ -266,7 +267,7 @@ class ArticleList extends ContentElement
 /**
  * Class SubTemplate
  *
- * Simple template class for zArticleImage extension.
+ * Simple template class for zArticleImage or teaserimages extension.
  * @copyright  Mario Müller 2011
  * @author     Mario Müller <http://www.lingo4u.de>
  * @package    ce_article_list
