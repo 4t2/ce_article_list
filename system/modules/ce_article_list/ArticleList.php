@@ -52,7 +52,7 @@ class ArticleList extends ContentElement
 	/**
 	 * Gets all child pages if article_list_recursive is set
 	 */
-	protected function getChildPages($pageId, $recursive = true, $hidden = false, $level=0)
+	protected function getChildPages($pageId, $recursive = true, $level=0)
 	{
 		$pageArray = array();
 
@@ -73,10 +73,10 @@ class ArticleList extends ContentElement
 		{
 			$pageArray[] = $objPages->id;
 			$this->idLevels[$objPages->id] = $level;
-			
+
 			if ($recursive)
 			{
-				$pageArray = array_merge($pageArray, $this->getChildPages($objPages->id, $recursive, $hidden, $level+1));
+				$pageArray = array_merge($pageArray, $this->getChildPages($objPages->id, $recursive, $level+1));
 			}
 		}
 
@@ -132,7 +132,7 @@ class ArticleList extends ContentElement
 		{
 			for ($i=count($articleListPages)-1; $i>=0; $i--)
 			{
-				array_splice($articleListPages, $i+1, 0, $this->getChildPages($articleListPages[$i]));
+				array_splice($articleListPages, $i+1, 0, $this->getChildPages($articleListPages[$i], true, $this->idLevels[$articleListPages[$i]]+1));
 			}
 		}
 		
@@ -214,7 +214,7 @@ class ArticleList extends ContentElement
 								{
 									$imageTemplate = false;
 								}
-	
+
 								$articles[] = array(
 									'id' => $objArticles->id,
 									'title' => $objArticles->title,
@@ -223,7 +223,7 @@ class ArticleList extends ContentElement
 									'image' => $imageTemplate
 								);
 							}
-	
+
 							$pages[] = array(
 								'title' => $objPages->pageTitle,
 								'link' => $this->generateFrontendUrl($objPages->row()),
