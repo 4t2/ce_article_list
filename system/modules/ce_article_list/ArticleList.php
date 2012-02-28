@@ -201,11 +201,11 @@ class ArticleList extends ContentElement
 							
 									$link .= (strlen($objArticles->alias) && !$GLOBALS['TL_CONFIG']['disableAlias']) ? $objArticles->alias : $objArticles->id;
 								}
-	
+
 								/**
 								 * Special handling for zArticleImage or teaserimages extension
 								 */
-								if ($objArticles->addImage && strlen($objArticles->singleSRC) && is_file(TL_ROOT . '/' . $objArticles->singleSRC))
+								if ((TL_MODE == 'FE') && $objArticles->addImage && strlen($objArticles->singleSRC) && is_file(TL_ROOT . '/' . $objArticles->singleSRC))
 								{
 									$imageTemplate = new SubTemplate();
 									$this->addImageToTemplate($imageTemplate, $objArticles->row());
@@ -267,21 +267,13 @@ class ArticleList extends ContentElement
 /**
  * Class SubTemplate
  *
- * Simple template class for zArticleImage or teaserimages extension.
- * @copyright  Mario Müller 2011
+ * Template class for zArticleImage or teaserimages extension.
+ * @copyright  Mario Müller 2012
  * @author     Mario Müller <http://www.lingo4u.de>
  * @package    ce_article_list
  */
-class SubTemplate
+class SubTemplate extends Template
 {
-
-	/**
-	 * Template data
-	 * @var array
-	 */
-	protected $arrData = array();
-
-
 	/**
 	 * Create a new template instance
 	 * @param string
@@ -290,61 +282,8 @@ class SubTemplate
 	 */
 	public function __construct()
 	{
+		parent::__construct('article_list_image');
 	}
-
-
-	/**
-	 * Set an object property
-	 * @param string
-	 * @param mixed
-	 */
-	public function __set($strKey, $varValue)
-	{
-		$this->arrData[$strKey] = $varValue;
-	}
-
-
-	/**
-	 * Return an object property
-	 * @param string
-	 * @return mixed
-	 */
-	public function __get($strKey)
-	{
-		return $this->arrData[$strKey];
-	}
-
-
-	/**
-	 * Check whether a property is set
-	 * @param string
-	 * @return boolean
-	 */
-	public function __isset($strKey)
-	{
-		return isset($this->arrData[$strKey]);
-	}
-
-
-	/**
-	 * Set the template data from an array
-	 * @param array
-	 */
-	public function setData($arrData)
-	{
-		$this->arrData = $arrData;
-	}
-
-
-	/**
-	 * Return the template data as array
-	 * @return array
-	 */
-	public function getData()
-	{
-		return $this->arrData;
-	}
-
 }
 
 ?>
