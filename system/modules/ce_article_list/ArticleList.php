@@ -205,7 +205,7 @@ class ArticleList extends ContentElement
 								/**
 								 * Special handling for zArticleImage or teaserimages extension
 								 */
-								if ((TL_MODE == 'FE') && $objArticles->addImage && strlen($objArticles->singleSRC) && is_file(TL_ROOT . '/' . $objArticles->singleSRC))
+								if ($objArticles->addImage && strlen($objArticles->singleSRC) && is_file(TL_ROOT . '/' . $objArticles->singleSRC))
 								{
 									$imageTemplate = new SubTemplate();
 									$this->addImageToTemplate($imageTemplate, $objArticles->row());
