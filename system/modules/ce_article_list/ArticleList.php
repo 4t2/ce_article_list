@@ -94,7 +94,7 @@ class ArticleList extends ContentElement
 
 		$selectedPages = deserialize($this->arrData['article_list_pages']);
 		$articleListPages = $selectedPages;
-		
+
 		if (is_array($articleListPages) && count($articleListPages) > 0)
 		{
 			#$query = '`id` IN ('.implode(',', $articleListPages).')';
@@ -135,7 +135,7 @@ class ArticleList extends ContentElement
 				array_splice($articleListPages, $i+1, 0, $this->getChildPages($articleListPages[$i], true, $this->idLevels[$articleListPages[$i]]+1));
 			}
 		}
-		
+
 		if (count($articleListPages))
 		{
 			$objPages = $this->Database->prepare("
@@ -223,10 +223,32 @@ class ArticleList extends ContentElement
 									'image' => $imageTemplate
 								);
 							}
+							
+							$protectedPage = false;
+							
+							// Protected element
+							if (!BE_USER_LOGGED_IN && $objPages->protected)
+							{
+								if (!FE_USER_LOGGED_IN)
+								{
+									$protectedPage = true;
+								}
+								else
+								{
+									$this->import('FrontendUser', 'User');
+									$groups = deserialize($objPages->groups);
+						
+									if (!is_array($groups) || empty($groups) || !count(array_intersect($groups, $this->User->groups)))
+									{
+										$protectedPage = true;
+									}
+								}
+							}
 
 							$pages[] = array(
 								'title' => $objPages->pageTitle,
 								'link' => $this->generateFrontendUrl($objPages->row()),
+								'protected' => $protectedPage,
 								'articles' => $articles,
 								'level' => (isset($this->idLevels[$objPages->id]) ? $this->idLevels[$objPages->id] : 0),
 								'sort' => (array_search($objPages->id, $articleListPages) !== FALSE ? array_search($objPages->id, $articleListPages) + 9000000 : $objPages->sorting)
