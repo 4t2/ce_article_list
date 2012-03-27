@@ -32,6 +32,7 @@
 /**
  * Miscellaneous
  */
-$GLOBALS['TL_LANG']['CTE']['article_list'] = array('Artikelliste', 'Listet alle Artikel einer Seite auf.');
+$GLOBALS['TL_LANG']['CTE']['article_list'] = array('Artikelliste', 'Listet alle Artikel ausgewählter Seiten auf.');
+$GLOBALS['TL_LANG']['CTE']['page_list'] = array('Seitenliste', 'Listet ausgewählte Seiten auf.');
 
 ?>

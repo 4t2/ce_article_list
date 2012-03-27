@@ -1,7 +1,7 @@
-Artikelliste
-============
+Artikelliste / Seitenliste
+==========================
 
-Mit dem Contao-Inhaltselement **ArticleList** kann man die Artikel verschiedener Seiten als Liste einbinden. Die Seiten werden automatisch als untergeordnete Überschrift der Inhaltselement-Überschrift gesetzt.
+Mit dem Contao-Inhaltselementen **Artikelliste** und **Seitenliste** kann man die Artikel verschiedener Seiten oder nur bestimmte Seiten als Liste einbinden. Bei der Artikelliste werden die Seiten automatisch als untergeordnete Überschrift der Inhaltselement-Überschrift gesetzt.
 
 Die Überschriften können optional deaktiviert werden, sodass ohne Änderungen am Template Seitenüberschriften auch ausgeblendet werden können.
 
@@ -10,7 +10,7 @@ Geschützte Seiten werden für nicht autorisierte Benutzer nicht verlinkt und al
 Templates
 ---------
 
-Über das Template lässt sich das natürlich noch beliebig anpassen. Im Template steht bspw. für jeden Artikel der Teasertext zur Verfügung. Somit kann leicht in der Artikelliste der Teasertext des ersten Artikels ausgegeben werden. Optional kann der Teaser auch deaktiviert werden.
+Über die Templates lässt sich das Verhalten beliebig anpassen. Im Template steht bspw. für jeden Artikel der Teasertext zur Verfügung. Somit kann leicht in der Artikelliste der Teasertext des ersten Artikels ausgegeben werden. Optional kann der Teaser auch deaktiviert werden.
 
 Unterseiten
 -----------

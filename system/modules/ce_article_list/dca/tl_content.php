@@ -28,8 +28,7 @@
  */
 
 
-#$GLOBALS['TL_DCA']['tl_content']['palettes']['__selector__'][] = '';
-#$GLOBALS['TL_DCA']['tl_content']['subpalettes'][''] = '';
+$GLOBALS['TL_DCA']['tl_content']['palettes']['page_list'] = '{type_legend},type,headline;{article_list_legend},article_list_pages,article_list_childrens,article_list_recursive,article_list_hidden;{protected_legend:hide},protected;{expert_legend:hide},cssID,space';
 
 $GLOBALS['TL_DCA']['tl_content']['palettes']['article_list'] = '{type_legend},type,headline;{article_list_legend},article_list_pages,article_list_childrens,article_list_recursive,article_list_hidden;{article_list_options_legend},article_list_page_link,article_list_page_headline,article_list_teaser;{protected_legend:hide},protected;{expert_legend:hide},cssID,space';
 

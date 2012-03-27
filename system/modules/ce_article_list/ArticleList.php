@@ -198,7 +198,7 @@ class ArticleList extends ContentElement
 									{
 										$link .= $objArticles->inColumn . ':';
 									}
-							
+
 									$link .= (strlen($objArticles->alias) && !$GLOBALS['TL_CONFIG']['disableAlias']) ? $objArticles->alias : $objArticles->id;
 								}
 

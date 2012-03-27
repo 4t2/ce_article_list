@@ -22,7 +22,3 @@ CREATE TABLE `tl_content` (
   `article_list_page_headline` char(1) NOT NULL default '1',
   `article_list_teaser` char(1) NOT NULL default '1'
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
-
-
-

@@ -32,3 +32,4 @@
  * Content elements
  */
 $GLOBALS['TL_CTE']['includes']['article_list'] = 'ArticleList';
+$GLOBALS['TL_CTE']['includes']['page_list'] = 'PageList';

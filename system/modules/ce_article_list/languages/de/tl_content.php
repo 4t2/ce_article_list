@@ -30,7 +30,7 @@
 /**
  * Legends
  */
-$GLOBALS['TL_LANG']['tl_content']['article_list_childrens'] = array('Unterseiten automatisch verlinken', 'Alle Unterseiten der Seite, auf der ArticleList eingebunden ist, automatisch mit einbeziehen.');
+$GLOBALS['TL_LANG']['tl_content']['article_list_childrens'] = array('Unterseiten automatisch verlinken', 'Alle Unterseiten der aktuellen Seite automatisch mit einbeziehen.');
 $GLOBALS['TL_LANG']['tl_content']['article_list_recursive'] = array('Seiten rekursiv verlinken', 'Alle Unterseiten ausgewählter Seiten automatisch mit einbeziehen.');
 $GLOBALS['TL_LANG']['tl_content']['article_list_hidden'] = array('Im Menü versteckte Seiten einbeziehen', 'Auch Seiten automatisch mit auflisten, die im Menü versteckt sind.');
 
