@@ -4,7 +4,7 @@ ArticleList/PageList - Contao Module CHANGELOG
 
 Version 1.5.0 (2012-03-27)
 ---------------------------
-- Neues Inhaltselement PageList
+- Neues Inhaltselement **PageList**
 
 Version 1.4.4
 -------------
