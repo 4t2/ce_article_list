@@ -142,6 +142,7 @@ class ArticleList extends ContentElement
 			SELECT
 				`id`,
 				`alias`,
+				`title`,
 				`pageTitle`,
 				`type`,
 				`hide`,
@@ -246,6 +247,7 @@ class ArticleList extends ContentElement
 							}
 
 							$pages[] = array(
+								'name' => $objPages->title,
 								'title' => $objPages->pageTitle,
 								'link' => $this->generateFrontendUrl($objPages->row()),
 								'protected' => $protectedPage,

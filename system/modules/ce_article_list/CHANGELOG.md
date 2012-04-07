@@ -2,6 +2,10 @@
 ArticleList/PageList - Contao Module CHANGELOG
 ==============================================
 
+Version 1.5.1 (2012-04-07)
+---------------------------
+- Seitenname wieder im Template zur Verfügung (Feld: `name`)
+
 Version 1.5.0 (2012-03-27)
 ---------------------------
 - Neues Inhaltselement **PageList**
@@ -16,7 +20,7 @@ Version 1.4.3
 
 Version 1.4.2
 -------------
-- Fehler beim page['level'] behoben
+- Fehler beim `page['level']` behoben
 
 Version 1.4.1
 -------------
