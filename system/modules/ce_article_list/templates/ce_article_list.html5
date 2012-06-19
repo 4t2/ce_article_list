@@ -9,7 +9,7 @@
 <<?php echo $this->hlPage; ?><?php if ($page['protected']): ?> class="protected"<?php endif; ?>><?php echo $page['title']; ?></<?php echo $this->hlPage; ?>>
 <?php endif; ?>
 <?php if (strlen($page['articles'][0]['teaser'])): ?>
-<div><?php echo $page['articles'][0]['teaser']; ?></div>
+<div<?php if ($page['articles'][0]['teaser_class']!=''):?> class="<?php echo $page['articles'][0]['teaser_class']; ?>"<?php endif; ?><?php if ($page['articles'][0]['teaser_cssID']!=''):?> id="<?php echo $page['articles'][0]['teaser_cssID']; ?>"<?php endif; ?>><?php echo $page['articles'][0]['teaser']; ?></div>
 <?php endif; ?>
 <ul>
 <?php foreach ($page['articles'] as $article): ?>

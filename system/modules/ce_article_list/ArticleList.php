@@ -161,7 +161,7 @@ class ArticleList extends ContentElement
 			if ($objPages->numRows > 0)
 			{
 				$arrInactiveModules = deserialize($GLOBALS['TL_CONFIG']['inactiveModules']);
-				
+
 				/**
 				 * fetch all columns if zArticleImage or teaserimages is installed and not inactive
 				 */
@@ -172,9 +172,9 @@ class ArticleList extends ContentElement
 				}
 				else
 				{
-					$sql = "SELECT `id`, `alias`, `title`, `teaser`, `inColumn` FROM tl_article WHERE " . (!$this->Input->cookie('FE_PREVIEW') ? "`published`='1' AND " : "") . " `pid`=? ORDER BY `sorting`";
+					$sql = "SELECT `id`, `alias`, `title`, `teaser`, `teaserCssID`, `inColumn` FROM tl_article WHERE " . (!$this->Input->cookie('FE_PREVIEW') ? "`published`='1' AND " : "") . " `pid`=? ORDER BY `sorting`";
 				}
-						
+
 				while ($objPages->next())
 				{
 					if ($this->article_list_hidden || ($objPages->hide != '1') || in_array($objPages->id, $selectedPages))
@@ -215,11 +215,15 @@ class ArticleList extends ContentElement
 								{
 									$imageTemplate = false;
 								}
+								
+								$arrTeaserCssID = deserialize($objArticles->teaserCssID);
 
 								$articles[] = array(
 									'id' => $objArticles->id,
 									'title' => $objArticles->title,
 									'teaser' => ($this->article_list_teaser ? $objArticles->teaser : ''),
+									'teaser_cssID' => $arrTeaserCssID[0],
+									'teaser_class' => $arrTeaserCssID[1],
 									'link' => $this->generateFrontendUrl($objPages->row(), $link),
 									'image' => $imageTemplate
 								);
