@@ -8,24 +8,53 @@
 <?php if ($this->hlPage): ?>
 <<?php echo $this->hlPage; ?><?php if ($page['protected']): ?> class="protected"<?php endif; ?>><?php echo $page['title']; ?></<?php echo $this->hlPage; ?>>
 <?php endif; ?>
-<?php if (strlen($page['articles'][0]['teaser'])): ?>
-<div<?php if ($page['articles'][0]['teaser_class']!=''):?> class="<?php echo $page['articles'][0]['teaser_class']; ?>"<?php endif; ?><?php if ($page['articles'][0]['teaser_cssID']!=''):?> id="<?php echo $page['articles'][0]['teaser_cssID']; ?>"<?php endif; ?>><?php echo $page['articles'][0]['teaser']; ?></div>
-<?php endif; ?>
+
 <ul>
 <?php foreach ($page['articles'] as $article): ?>
+
+<?php $objArticle = (object)$article; ?>
+
 <?php if ($page['protected']): ?>
-	<li class="protected"><?php echo $article['title']; ?></li>
+	<li class="protected"><?php echo $objArticle->title; ?></li>
 <?php else: ?>
-	<li><?php if ($article['image']): ?>
-    <div class="image_container<?php echo $article['image']->floatClass; ?>"<?php if ($article['image']->margin || $article['image']->float): ?> style="<?php echo trim($article['image']->margin . $article['image']->float); ?>"<?php endif; ?>>  
-    <?php if ($article['image']->href): ?><a href="<?php echo $article['image']->href; ?>"<?php echo $article['image']->attributes; ?> title="<?php echo $article['image']->alt; ?>"><?php endif; ?>  
-    <img src="<?php echo $article['image']->src; ?>"<?php echo $article['image']->imgSize; ?> alt="<?php echo $article['image']->alt; ?>">  
-    <?php if ($article['image']->href): ?></a><?php endif; ?>  
-    <?php if ($article['image']->caption): ?><p class="caption"><?php echo $article['image']->caption; ?></p><?php endif; ?>  
-    </div>  
-  <?php endif; ?><a href="<?php echo $article['link']; ?>"><?php echo $article['title']; ?></a></li>
+
+<?php if ($objArticle->teaser != ''): ?>
+	<li><a href="<?php echo $objArticle->link; ?>"><?php echo $objArticle->title; ?></a>
+<?php if ($objArticle->addImage): ?>
+
+
+<?php if (!$objArticle->image->addBefore): ?>
+	<?php echo $objArticle->teaser; ?>
 <?php endif; ?>
-<?php endforeach; ?>
+
+<figure class="image_container<?php echo $objArticle->image->floatClass; ?>"<?php if ($objArticle->image->margin || $objArticle->image->float): ?> style="<?php echo trim($objArticle->image->margin . $objArticle->image->float); ?>"<?php endif; ?>>
+<?php if ($objArticle->image->href): ?>
+<a href="<?php echo $objArticle->image->href; ?>"<?php if ($objArticle->image->linkTitle): ?> title="<?php echo $objArticle->image->linkTitle; ?>"<?php endif; ?><?php echo $objArticle->image->attributes; ?>>
+<?php endif; ?>
+<img src="<?php echo $objArticle->image->src; ?>"<?php echo $objArticle->image->imgSize; ?> alt="<?php echo $objArticle->image->alt; ?>"<?php if ($objArticle->image->title): ?> title="<?php echo $objArticle->image->title; ?>"<?php endif; ?>>
+<?php if ($objArticle->image->href): ?>
+</a>
+<?php endif; ?>
+<?php if ($objArticle->image->caption): ?>
+<figcaption class="caption" style="width:<?php echo $objArticle->image->arrSize[0]; ?>px"><?php echo $objArticle->image->caption; ?></figcaption>
+<?php endif; ?>
+</figure>
+
+<?php if ($objArticle->image->addBefore): ?>
+	<?php echo $objArticle->teaser; ?>
+<?php endif; ?>
+
+
+<?php else: /* image */ ?>
+	<?php echo $objArticle->teaser; ?>
+<?php endif; /* image */ ?>
+	</li>
+<?php else: /* teaser */ ?>
+	<li><a href="<?php echo $article['link']; ?>"><?php echo $article['title']; ?></a></li>
+<?php endif; /* teaser */ ?>
+
+<?php endif; /* !protected */ ?>
+<?php endforeach; /* articles */ ?>
 </ul>
-<?php endforeach; ?>
+<?php endforeach; /* pages */ ?>
 </nav>

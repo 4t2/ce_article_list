@@ -35,9 +35,9 @@ Ist nur ein Artikel in einer Seite vorhanden, kann optional die Seite statt dem 
 Sortierung
 ----------
 
-Ist die Option „Unterseiten automatisch verlinken“ aktiviert, werden die Unterseiten immer am Anfang aufgelistet. Weitere manuell ausgewähle Seiten werden in der gleichen Reihenfolge wie im Seitenbaum angezeigt aufgelistet.
+Ist die Option „Unterseiten automatisch verlinken“ aktiviert, werden die Unterseiten immer am Anfang aufgelistet. Weitere manuell ausgewählte Seiten werden in der gleichen Reihenfolge wie im Seitenbaum angezeigt aufgelistet.
 
 Artikelbilder
 -------------
 
-Ist die Erweiterung *zArticleImage* oder *teaserimages* installiert, können die dort gesetzten Bilder in der Artikelliste mit angezeigt werden.
+Ist ein Erweiterung für Artikelteaser wie *zArticleImage* oder *teaserimages* installiert, können die dort gesetzten Bilder in der Artikelliste mit angezeigt werden.

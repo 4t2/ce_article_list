@@ -21,13 +21,13 @@
  * Software Foundation website at <http://www.gnu.org/licenses/>.
  *
  * PHP version 5
- * @copyright  Lingo4you 2011
- * @author     Mario Müller <http://www.lingo4u.de/>
+ * @copyright  Lingo4you 2013
+ * @author     Mario Müller <http://www.lingolia.com/>
  * @package    ArticleList
  * @license    http://opensource.org/licenses/lgpl-3.0.html
  */
 
-class PageList extends ContentElement
+class PageList extends \ContentElement
 {
 
 	/**
@@ -37,6 +37,132 @@ class PageList extends ContentElement
 	protected $strTemplate = 'ce_page_list';
 	
 	protected $idLevels = array();
+
+	/**
+	 * Generate content element
+	 */
+	protected function compile()
+	{
+		global $objPage;
+		$query = '';
+		$pages = array();
+
+		$selectedPages = deserialize($this->article_list_pages);
+
+		if (is_array($selectedPages))
+		{
+			$articleListPages = $selectedPages;
+		}
+		elseif (!empty($selectedPages))
+		{
+			$articleListPages = array($selectedPages);
+		}
+		else
+		{
+			$articleListPages = array();
+		}
+
+		if ($this->article_list_childrens)
+		{
+			if (TL_MODE == 'FE')
+			{
+				$pageId = $objPage->id;
+			}
+			else
+			{
+				$objArticle = $this->Database->prepare("SELECT `pid` FROM `tl_article` WHERE `id`=?")->limit(1)->execute($this->pid);
+
+				if ($objArticle->next())
+				{
+					$pageId = $objArticle->pid;
+				}
+			}
+
+			array_splice($articleListPages, 0, 0, $this->getChildPages($pageId, false));
+		}
+
+		if ($this->article_list_recursive)
+		{
+			for ($i=count($articleListPages)-1; $i>=0; $i--)
+			{
+				array_splice($articleListPages, $i+1, 0, $this->getChildPages($articleListPages[$i], true, $this->idLevels[$articleListPages[$i]]+1));
+			}
+		}
+
+		if (count($articleListPages))
+		{
+			$objPages = $this->Database->prepare("
+			SELECT
+				`id`,
+				`alias`,
+				`title`,
+				`pageTitle`,
+				`type`,
+				`hide`,
+				`protected`,
+				`groups`,
+				`sorting`
+			FROM
+				tl_page
+			WHERE
+				" . (!$this->Input->cookie('FE_PREVIEW') ? "`published`='1' AND " : "") . "
+				`id` IN (" . implode(',', $articleListPages) . ")
+			ORDER BY `sorting`
+			")
+			->execute();
+
+			if ($objPages->numRows > 0)
+			{						
+				while ($objPages->next())
+				{
+					if ($this->article_list_hidden || ($objPages->hide != '1') || in_array($objPages->id, $selectedPages))
+					{
+						$protectedPage = false;
+
+						// Protected element
+						if (!BE_USER_LOGGED_IN && $objPages->protected)
+						{
+							if (!FE_USER_LOGGED_IN)
+							{
+								$protectedPage = true;
+							}
+							else
+							{
+								$this->import('FrontendUser', 'User');
+								$groups = deserialize($objPages->groups);
+					
+								if (!is_array($groups) || empty($groups) || !count(array_intersect($groups, $this->User->groups)))
+								{
+									$protectedPage = true;
+								}
+							}
+						}
+
+						$pages[] = array(
+							'name' => $objPages->title,
+							'title' => ($objPages->pageTitle != '' ? $objPages->pageTitle : $objPages->title),
+							'link' => $this->generateFrontendUrl($objPages->row()),
+							'protected' => $protectedPage,
+							'level' => (isset($this->idLevels[$objPages->id]) ? $this->idLevels[$objPages->id] : 0),
+							'sort' => (array_search($objPages->id, $articleListPages) !== FALSE ? array_search($objPages->id, $articleListPages) + 9000000 : $objPages->sorting)
+						);
+					}
+				}
+			}
+		}
+		elseif (TL_MODE == 'FE')
+		{
+			$this->log(sprintf('No pages for ID %d (%s) found.', $objPage->id, $objPage->pageTitle), 'PageList', TL_NOTICE);
+		}
+
+		if ((count($pages) > 0) && (count($articleListPages) > 0))
+		{
+			usort($pages, array($this, 'pageSort'));
+		}
+
+		$this->Template->pages = $pages;		
+	}
+
 
 	/**
 	 * Helper function for usort
@@ -81,126 +207,6 @@ class PageList extends ContentElement
 		}
 
 		return $pageArray;
-	}
-
-	/**
-	 * Generate content element
-	 */
-	protected function compile()
-	{
-		global $objPage;
-		$query = '';
-		$pages = array();
-
-		$selectedPages = deserialize($this->arrData['article_list_pages']);
-		$articleListPages = $selectedPages;
-
-		if (is_array($articleListPages) && count($articleListPages) > 0)
-		{
-			#$query = '`id` IN ('.implode(',', $articleListPages).')';
-		}
-		else {
-			$articleListPages = array();
-		}
-
-		if ($this->article_list_childrens)
-		{
-			if (TL_MODE == 'FE')
-			{
-				$pageId = $objPage->id;
-			}
-			else
-			{
-				$objArticle = $this->Database->prepare("SELECT `pid` FROM `tl_article` WHERE `id`=?")->limit(1)->execute($this->pid);
-
-				if ($objArticle->next())
-				{
-					$pageId = $objArticle->pid;
-				}
-			}
-
-			array_splice($articleListPages, 0, 0, $this->getChildPages($pageId, false));
-#			$this->log('articleListPages: '.implode($articleListPages, ','), 'ArticleList', TL_ERROR);
-		}
-
-		if ($this->article_list_recursive)
-		{
-			for ($i=count($articleListPages)-1; $i>=0; $i--)
-			{
-				array_splice($articleListPages, $i+1, 0, $this->getChildPages($articleListPages[$i], true, $this->idLevels[$articleListPages[$i]]+1));
-			}
-		}
-
-		if (count($articleListPages))
-		{
-			$objPages = $this->Database->prepare("
-			SELECT
-				`id`,
-				`alias`,
-				`pageTitle`,
-				`type`,
-				`hide`,
-				`protected`,
-				`groups`,
-				`sorting`
-			FROM
-				tl_page
-			WHERE
-				" . (!$this->Input->cookie('FE_PREVIEW') ? "`published`='1' AND " : "") . "
-				`id` IN (" . implode(',', $articleListPages) . ")
-			ORDER BY `sorting`
-			")
-			->execute();
-
-			if ($objPages->numRows > 0)
-			{						
-				while ($objPages->next())
-				{
-					if ($this->article_list_hidden || ($objPages->hide != '1') || in_array($objPages->id, $selectedPages))
-					{
-						$protectedPage = false;
-
-						// Protected element
-						if (!BE_USER_LOGGED_IN && $objPages->protected)
-						{
-							if (!FE_USER_LOGGED_IN)
-							{
-								$protectedPage = true;
-							}
-							else
-							{
-								$this->import('FrontendUser', 'User');
-								$groups = deserialize($objPages->groups);
-					
-								if (!is_array($groups) || empty($groups) || !count(array_intersect($groups, $this->User->groups)))
-								{
-									$protectedPage = true;
-								}
-							}
-						}
-
-						$pages[] = array(
-							'title' => $objPages->pageTitle,
-							'link' => $this->generateFrontendUrl($objPages->row()),
-							'protected' => $protectedPage,
-							'level' => (isset($this->idLevels[$objPages->id]) ? $this->idLevels[$objPages->id] : 0),
-							'sort' => (array_search($objPages->id, $articleListPages) !== FALSE ? array_search($objPages->id, $articleListPages) + 9000000 : $objPages->sorting)
-						);
-					}
-				}
-			}
-		}
-		elseif (TL_MODE == 'FE')
-		{
-			$this->log(sprintf('No pages for ID %d found.', $objPage->id), 'PageList', TL_NOTICE);
-		}
-
-		if ((count($pages) > 0) && (count($articleListPages) > 0))
-		{
-			usort($pages, array($this, 'pageSort'));
-		}
-
-		$this->Template->pages = $pages;		
 	}
 
 }

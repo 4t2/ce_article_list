@@ -6,6 +6,10 @@ Version 1.6.0 (2012-08-28)
 ---------------------------
 - Contao 3 Anpassungen
 
+Version 1.5.2
+-------------
+- im Template stehen jetzt die Klasse und ID des Teasers zur Verfügung
+
 Version 1.5.1 (2012-04-07)
 ---------------------------
 - Seitenname wieder im Template zur Verfügung (Feld: `name`)
