@@ -21,8 +21,8 @@
  * Software Foundation website at <http://www.gnu.org/licenses/>.
  *
  * PHP version 5
- * @copyright  Lingo4you 2011
- * @author     Mario Müller <http://www.lingo4u.de/>
+ * @copyright  Lingo4you 2013
+ * @author     Mario Müller <http://www.lingolia.com/>
  * @package    ArticleList
  * @license    http://opensource.org/licenses/lgpl-3.0.html
  */
@@ -64,9 +64,11 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['article_list_pages'] = array
 	'label'                   => &$GLOBALS['TL_LANG']['tl_content']['article_list_pages'],
 	'exclude'                 => true,
 	'inputType'               => 'pageTree',
-	'eval'                    => array(
-		'mandatory' => false,
-		'fieldType'=>'checkbox'
+	'eval'                    => array
+	(
+		'mandatory'		=> false,
+		'multiple'		=> true,
+		'fieldType'		=> 'checkbox'
 	)
 );
 
@@ -85,6 +87,7 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['article_list_page_headline'] = array
 	'inputType'		=> 'checkbox',
 	'eval'          => array('tl_class'=>'w50')
 );
+
 $GLOBALS['TL_DCA']['tl_content']['fields']['article_list_teaser'] = array
 (
 	'label'			=> &$GLOBALS['TL_LANG']['tl_content']['article_list_teaser'],
@@ -93,6 +96,3 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['article_list_teaser'] = array
 	'inputType'		=> 'checkbox',
 	'eval'          => array('tl_class'=>'w50')
 );
-
-
-?>

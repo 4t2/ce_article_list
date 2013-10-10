@@ -2,6 +2,10 @@
 ArticleList/PageList - Contao Module CHANGELOG
 ==============================================
 
+Version 1.6.1 (2013-01-15)
+---------------------------
+- Fehlerkorrekturen
+
 Version 1.6.0 (2012-08-28)
 ---------------------------
 - Contao 3 Anpassungen

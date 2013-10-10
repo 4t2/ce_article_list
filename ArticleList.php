@@ -319,7 +319,7 @@ class ArticleList extends \ContentElement
  * @author     Mario Müller <http://www.lingo4u.de>
  * @package    ce_article_list
  */
-class SubTemplate extends Template
+class SubTemplate extends \Template
 {
 	/**
 	 * Create a new template instance
