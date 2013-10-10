@@ -44,6 +44,7 @@ class ArticleList extends \ContentElement
 	protected function compile()
 	{
 		global $objPage;
+#die('<pre>'.var_export($this, true));
 		$query = '';
 		$pages = array();
 
@@ -62,23 +63,23 @@ class ArticleList extends \ContentElement
 			$articleListPages = array();
 		}
 
+		if (TL_MODE == 'FE')
+		{
+			$pageId = $objPage->id;
+		}
+		else
+		{
+			$objArticle = $this->Database->prepare("SELECT `pid` FROM `tl_article` WHERE `id`=?")
+				->execute($this->pid);
+		
+			if ($objArticle->next())
+			{
+				$pageId = $objArticle->pid;
+			}
+		}
+
 		if ($this->article_list_childrens)
 		{
-			if (TL_MODE == 'FE')
-			{
-				$pageId = $objPage->id;
-			}
-			else
-			{
-				$objArticle = $this->Database->prepare("SELECT `pid` FROM `tl_article` WHERE `id`=?")
-					->execute($this->pid);
-			
-				if ($objArticle->next())
-				{
-					$pageId = $objArticle->pid;
-				}
-			}
-
 			array_splice($articleListPages, 0, 0, $this->getChildPages($pageId, false));
 		}
 
@@ -192,8 +193,11 @@ class ArticleList extends \ContentElement
 								
 								$arrTeaserCssID = deserialize($objArticles->teaserCssID);
 
-								$articles[] = array(
+								$articles[] = array
+								(
 									'id' => $objArticles->id,
+									'active' => ($this->pid == $objArticles->id),
+									'class' => ($this->pid == $objArticles->id ? 'active' : ''),
 									'title' => $objArticles->title,
 									'teaser' => ($this->article_list_teaser ? $objArticles->teaser : ''),
 									'teaser_cssID' => $arrTeaserCssID[0],
@@ -225,13 +229,16 @@ class ArticleList extends \ContentElement
 								}
 							}
 
-							$pages[] = array(
+							$pages[] = array
+							(
 								'name' => $objPages->title,
 								'title' => ($objPages->pageTitle != '' ? $objPages->pageTitle : $objPages->title),
 								'link' => $this->generateFrontendUrl($objPages->row()),
 								'protected' => $protectedPage,
 								'articles' => $articles,
 								'level' => (isset($this->idLevels[$objPages->id]) ? $this->idLevels[$objPages->id] : 0),
+								'active' => ($pageId == $objPages->id),
+								'class' => ($pageId == $objPages->id ? 'active'.($protectedPage ? ' protected' : '') : ($protectedPage ? 'protected' : '')),
 								'sort' => (array_search($objPages->id, $articleListPages) !== FALSE ? array_search($objPages->id, $articleListPages) + 9000000 : $objPages->sorting)
 							);
 						}

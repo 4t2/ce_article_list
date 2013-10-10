@@ -7,9 +7,9 @@
 <ul>
 <?php foreach ($this->pages as $page): ?>
 <?php if ($page['protected']): ?>
-	<li class="protected level<?php echo $page['level']; ?>"><?php echo $page['title']; ?></li>
+	<li class="<?php echo $page['class']; ?>"><?php echo $page['title']; ?></li>
 <?php else: ?>
-	<li class="level<?php echo $page['level']; ?>"><a href="<?php echo $page['link']; ?>"><?php echo $page['title']; ?></a></li>
+	<li class="<?php echo $page['class']; ?>"><a href="<?php echo $page['link']; ?>"><?php echo $page['title']; ?></a></li>
 <?php endif; ?>
 <?php endforeach; ?>
 </ul>

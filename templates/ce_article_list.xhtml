@@ -50,7 +50,7 @@
 <?php endif; /* image */ ?>
 	</li>
 <?php else: /* teaser */ ?>
-	<li><a href="<?php echo $article['link']; ?>"><?php echo $article['title']; ?></a></li>
+	<li<?php if (!empty($article['class'])) echo ' class="'.$article['class'].'"'; ?>><a href="<?php echo $article['link']; ?>"><?php echo $article['title']; ?></a></li>
 <?php endif; /* teaser */ ?>
 
 <?php endif; /* !protected */ ?>

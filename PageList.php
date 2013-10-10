@@ -62,22 +62,22 @@ class PageList extends \ContentElement
 			$articleListPages = array();
 		}
 
+		if (TL_MODE == 'FE')
+		{
+			$pageId = $objPage->id;
+		}
+		else
+		{
+			$objArticle = $this->Database->prepare("SELECT `pid` FROM `tl_article` WHERE `id`=?")->limit(1)->execute($this->pid);
+
+			if ($objArticle->next())
+			{
+				$pageId = $objArticle->pid;
+			}
+		}
+
 		if ($this->article_list_childrens)
 		{
-			if (TL_MODE == 'FE')
-			{
-				$pageId = $objPage->id;
-			}
-			else
-			{
-				$objArticle = $this->Database->prepare("SELECT `pid` FROM `tl_article` WHERE `id`=?")->limit(1)->execute($this->pid);
-
-				if ($objArticle->next())
-				{
-					$pageId = $objArticle->pid;
-				}
-			}
-
 			array_splice($articleListPages, 0, 0, $this->getChildPages($pageId, false));
 		}
 
@@ -137,13 +137,18 @@ class PageList extends \ContentElement
 								}
 							}
 						}
+						
+						$level = (isset($this->idLevels[$objPages->id]) ? $this->idLevels[$objPages->id] : 0);
 
-						$pages[] = array(
+						$pages[] = array
+						(
 							'name' => $objPages->title,
 							'title' => ($objPages->pageTitle != '' ? $objPages->pageTitle : $objPages->title),
 							'link' => $this->generateFrontendUrl($objPages->row()),
 							'protected' => $protectedPage,
-							'level' => (isset($this->idLevels[$objPages->id]) ? $this->idLevels[$objPages->id] : 0),
+							'level' => $level,
+							'active' => ($pageId == $objPages->id),
+							'class' => 'level'.$level.' '.($pageId == $objPages->id ? ' active'.($protectedPage ? ' protected' : '') : ($protectedPage ? 'protected' : '')),
 							'sort' => (array_search($objPages->id, $articleListPages) !== FALSE ? array_search($objPages->id, $articleListPages) + 9000000 : $objPages->sorting)
 						);
 					}
