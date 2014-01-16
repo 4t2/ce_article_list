@@ -21,7 +21,7 @@
  * Software Foundation website at <http://www.gnu.org/licenses/>.
  *
  * PHP version 5
- * @copyright  Lingo4you 2013
+ * @copyright  Lingo4you 2014
  * @author     Mario Müller <http://www.lingolia.com/>
  * @package    ArticleList
  * @license    http://opensource.org/licenses/lgpl-3.0.html
@@ -44,7 +44,7 @@ class ArticleList extends \ContentElement
 	protected function compile()
 	{
 		global $objPage;
-#die('<pre>'.var_export($this, true));
+
 		$query = '';
 		$pages = array();
 
@@ -126,12 +126,34 @@ class ArticleList extends \ContentElement
 						(!$this->Input->cookie('FE_PREVIEW') ? "`published`='1' AND " : "") . " `pid`=? 
 					ORDER BY `sorting`";
 
+				$this->import('FrontendUser', 'User');
+
 				while ($objPages->next())
 				{
 					if ($this->article_list_hidden || ($objPages->hide != '1') || in_array($objPages->id, $selectedPages))
 					{
+						$protectedPage = false;
+						
+						// Protected element
+						if (!BE_USER_LOGGED_IN && $objPages->protected)
+						{
+							if (!FE_USER_LOGGED_IN)
+							{
+								$protectedPage = true;
+							}
+							else
+							{
+								$groups = deserialize($objPages->groups);
+
+								if (!is_array($groups) || empty($groups) || !count(array_intersect($groups, $this->User->groups)))
+								{
+									$protectedPage = true;
+								}
+							}
+						}
+
 						$objArticles = $this->Database->prepare($sql)->execute($objPages->id);
-	
+
 						if ($objArticles->numRows > 0)
 						{
 							$articles = array();
@@ -157,7 +179,6 @@ class ArticleList extends \ContentElement
 								/**
 								 * Special handling for zArticleImage or teaserimages extension
 								 */
-
 								$imageTemplate = false;
 								$addImage = false;
 								
@@ -165,18 +186,15 @@ class ArticleList extends \ContentElement
 								{
 									if ($objArticles->addImage && $objArticles->singleSRC != '')
 									{
-										if (is_numeric($objArticles->singleSRC))
+										$objModel = \FilesModel::findByPk($objArticles->singleSRC);
+																	
+										if ($objModel !== null && is_file(TL_ROOT . '/' . $objModel->path))
 										{
-											$objModel = \FilesModel::findByPk($objArticles->singleSRC);
-																		
-											if ($objModel !== null && is_file(TL_ROOT . '/' . $objModel->path))
-											{
-												$addImage = true;
-												$imageTemplate = new SubTemplate();
+											$addImage = true;
+											$imageTemplate = new SubTemplate();
 
-												$objArticles->singleSRC = $objModel->path;
-												$this->addImageToTemplate($imageTemplate, $objArticles->row());
-											}
+											$objArticles->singleSRC = $objModel->path;
+											$this->addImageToTemplate($imageTemplate, $objArticles->row());
 										}
 									}
 								}
@@ -190,45 +208,45 @@ class ArticleList extends \ContentElement
 										$this->addImageToTemplate($imageTemplate, $objArticles->row());
 									}
 								}
-								
+
 								$arrTeaserCssID = deserialize($objArticles->teaserCssID);
+
+								$isProtected = $protectedPage;
+
+								// Protected element
+								if (!$protectedPage && !BE_USER_LOGGED_IN && $objArticles->protected)
+								{
+									if (!FE_USER_LOGGED_IN)
+									{
+										$isProtected = true;
+									}
+									else
+									{
+										$groups = deserialize($objArticles->groups);
+							
+										if (!is_array($groups) || empty($groups) || !count(array_intersect($groups, $this->User->groups)))
+										{
+											$isProtected = true;
+										}
+									}
+								}
 
 								$articles[] = array
 								(
-									'id' => $objArticles->id,
-									'active' => ($this->pid == $objArticles->id),
-									'class' => ($this->pid == $objArticles->id ? 'active' : ''),
-									'title' => $objArticles->title,
-									'teaser' => ($this->article_list_teaser ? $objArticles->teaser : ''),
-									'teaser_cssID' => $arrTeaserCssID[0],
-									'teaser_class' => $arrTeaserCssID[1],
-									'link' => $this->generateFrontendUrl($objPages->row(), $link),
-									'image' => $imageTemplate,
-									'addImage' => $addImage
+									'id'			=> $objArticles->id,
+									'active'		=> ($this->pid == $objArticles->id),
+									'class'			=> ($this->pid == $objArticles->id ? 'active'.($isProtected ? ' protected' : '') : ($isProtected ? 'protected' : '')),
+									'title'			=> $objArticles->title,
+									'teaser'		=> ($this->article_list_teaser ? $objArticles->teaser : ''),
+									'teaser_cssID'	=> $arrTeaserCssID[0],
+									'teaser_class'	=> $arrTeaserCssID[1],
+									'link'			=> $this->generateFrontendUrl($objPages->row(), $link),
+									'protected'		=> $isProtected,
+									'image'			=> $imageTemplate,
+									'addImage'		=> $addImage
 								);
 							}
 							
-							$protectedPage = false;
-							
-							// Protected element
-							if (!BE_USER_LOGGED_IN && $objPages->protected)
-							{
-								if (!FE_USER_LOGGED_IN)
-								{
-									$protectedPage = true;
-								}
-								else
-								{
-									$this->import('FrontendUser', 'User');
-									$groups = deserialize($objPages->groups);
-						
-									if (!is_array($groups) || empty($groups) || !count(array_intersect($groups, $this->User->groups)))
-									{
-										$protectedPage = true;
-									}
-								}
-							}
-
 							$pages[] = array
 							(
 								'name' => $objPages->title,

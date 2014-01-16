@@ -21,7 +21,7 @@
  * Software Foundation website at <http://www.gnu.org/licenses/>.
  *
  * PHP version 5
- * @copyright  Lingo4you 2013
+ * @copyright  Lingo4you 2014
  * @author     Mario Müller <http://www.lingolia.com/>
  * @package    ArticleList
  * @license    http://opensource.org/licenses/lgpl-3.0.html
@@ -113,27 +113,28 @@ class PageList extends \ContentElement
 
 			if ($objPages->numRows > 0)
 			{						
+				$this->import('FrontendUser', 'User');
+
 				while ($objPages->next())
 				{
 					if ($this->article_list_hidden || ($objPages->hide != '1') || in_array($objPages->id, $selectedPages))
 					{
-						$protectedPage = false;
+						$isProtected = false;
 
 						// Protected element
 						if (!BE_USER_LOGGED_IN && $objPages->protected)
 						{
 							if (!FE_USER_LOGGED_IN)
 							{
-								$protectedPage = true;
+								$isProtected = true;
 							}
 							else
 							{
-								$this->import('FrontendUser', 'User');
 								$groups = deserialize($objPages->groups);
 					
 								if (!is_array($groups) || empty($groups) || !count(array_intersect($groups, $this->User->groups)))
 								{
-									$protectedPage = true;
+									$isProtected = true;
 								}
 							}
 						}
@@ -142,14 +143,14 @@ class PageList extends \ContentElement
 
 						$pages[] = array
 						(
-							'name' => $objPages->title,
-							'title' => ($objPages->pageTitle != '' ? $objPages->pageTitle : $objPages->title),
-							'link' => $this->generateFrontendUrl($objPages->row()),
-							'protected' => $protectedPage,
-							'level' => $level,
-							'active' => ($pageId == $objPages->id),
-							'class' => 'level'.$level.' '.($pageId == $objPages->id ? ' active'.($protectedPage ? ' protected' : '') : ($protectedPage ? 'protected' : '')),
-							'sort' => (array_search($objPages->id, $articleListPages) !== FALSE ? array_search($objPages->id, $articleListPages) + 9000000 : $objPages->sorting)
+							'name'			=> $objPages->title,
+							'title'			=> ($objPages->pageTitle != '' ? $objPages->pageTitle : $objPages->title),
+							'link'			=> $this->generateFrontendUrl($objPages->row()),
+							'protected'		=> $isProtected,
+							'level'			=> $level,
+							'active'		=> ($pageId == $objPages->id),
+							'class'			=> 'level'.$level.' '.($pageId == $objPages->id ? ' active'.($isProtected ? ' protected' : '') : ($isProtected ? 'protected' : '')),
+							'sort'			=> (array_search($objPages->id, $articleListPages) !== FALSE ? array_search($objPages->id, $articleListPages) + 9000000 : $objPages->sorting)
 						);
 					}
 				}

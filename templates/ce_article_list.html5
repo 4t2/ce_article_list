@@ -15,11 +15,11 @@
 <?php $objArticle = (object)$article; ?>
 
 <?php if ($page['protected']): ?>
-	<li<?php if (!empty($page['class'])) echo ' class="'.$page['class'].'"'; ?>><?php echo $objArticle->title; ?></li>
+	<li<?php if (!empty($objArticle->class)) echo ' class="'.$objArticle->class.'"'; ?>><?php echo $objArticle->title; ?></li>
 <?php else: ?>
 
 <?php if ($objArticle->teaser != ''): ?>
-	<li<?php if (!empty($page['class'])) echo ' class="'.$page['class'].'"'; ?>><a href="<?php echo $objArticle->link; ?>"><?php echo $objArticle->title; ?></a>
+	<li<?php if (!empty($objArticle->class)) echo ' class="'.$objArticle->class.'"'; ?>><?php if (!$objArticle->protected): ?><a href="<?php echo $objArticle->link; ?>"><?php echo $objArticle->title; ?></a><?php else: ?><?php echo $objArticle->title; ?><?php endif; ?>
 <?php if ($objArticle->addImage): ?>
 
 
@@ -50,7 +50,7 @@
 <?php endif; /* image */ ?>
 	</li>
 <?php else: /* teaser */ ?>
-	<li<?php if (!empty($article['class'])) echo ' class="'.$article['class'].'"'; ?>><a href="<?php echo $article['link']; ?>"><?php echo $article['title']; ?></a></li>
+	<li<?php if (!empty($objArticle->class)) echo ' class="'.$objArticle->class.'"'; ?>><?php if (!$objArticle->protected): ?><a href="<?php echo $objArticle->link; ?>"><?php echo $objArticle->title; ?></a><?php else: ?><?php echo $objArticle->title; ?><?php endif; ?></li>
 <?php endif; /* teaser */ ?>
 
 <?php endif; /* !protected */ ?>
