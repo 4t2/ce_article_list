@@ -28,9 +28,9 @@
  */
 
 
-$GLOBALS['TL_DCA']['tl_content']['palettes']['page_list'] = '{type_legend},type,headline;{article_list_legend},article_list_pages,article_list_childrens,article_list_recursive,article_list_hidden;{protected_legend:hide},protected;{expert_legend:hide},cssID,space';
+$GLOBALS['TL_DCA']['tl_content']['palettes']['page_list'] = '{type_legend},type,headline;{article_list_legend},article_list_pages,article_list_childrens,article_list_recursive,article_list_hidden;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID,space';
 
-$GLOBALS['TL_DCA']['tl_content']['palettes']['article_list'] = '{type_legend},type,headline;{article_list_legend},article_list_pages,article_list_childrens,article_list_recursive,article_list_hidden;{article_list_options_legend},article_list_page_link,article_list_page_headline,article_list_teaser;{protected_legend:hide},protected;{expert_legend:hide},cssID,space';
+$GLOBALS['TL_DCA']['tl_content']['palettes']['article_list'] = '{type_legend},type,headline;{article_list_legend},article_list_pages,article_list_childrens,article_list_recursive,article_list_hidden;{article_list_options_legend},article_list_page_link,article_list_page_headline,article_list_teaser;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID,space';
 
 
 
@@ -62,6 +62,7 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['article_list_hidden'] = array
 $GLOBALS['TL_DCA']['tl_content']['fields']['article_list_pages'] = array
 (
 	'label'                   => &$GLOBALS['TL_LANG']['tl_content']['article_list_pages'],
+	'default'       		  => '1',
 	'exclude'                 => true,
 	'inputType'               => 'pageTree',
 	'eval'                    => array

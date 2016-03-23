@@ -21,8 +21,8 @@
  * Software Foundation website at <http://www.gnu.org/licenses/>.
  *
  * PHP version 5
- * @copyright  Lingo4you 2014
- * @author     Mario Müller <http://www.lingolia.com/>
+ * @copyright  Lingo4you 2016
+ * @author     Mario Müller https://www.lingolia.com/
  * @package    ArticleList
  * @license    http://opensource.org/licenses/lgpl-3.0.html
  */
@@ -69,7 +69,7 @@ class ArticleList extends \ContentElement
 		}
 		else
 		{
-			$objArticle = $this->Database->prepare("SELECT `pid` FROM `tl_article` WHERE `id`=?")
+			$objArticle = \Database::getInstance()->prepare("SELECT `pid` FROM `tl_article` WHERE `id`=?")
 				->execute($this->pid);
 		
 			if ($objArticle->next())
@@ -93,7 +93,7 @@ class ArticleList extends \ContentElement
 
 		if (count($articleListPages))
 		{
-			$objPages = $this->Database->prepare("
+			$objPages = \Database::getInstance()->prepare("
 			SELECT
 				`id`,
 				`alias`,
@@ -107,7 +107,7 @@ class ArticleList extends \ContentElement
 			FROM
 				tl_page
 			WHERE
-				" . (!$this->Input->cookie('FE_PREVIEW') ? "`published`='1' AND " : "") . "
+				" . (!\Input::cookie('FE_PREVIEW') ? "`published`='1' AND " : "") . "
 				`id` IN (" . implode(',', $articleListPages) . ")
 			ORDER BY `sorting`
 			")
@@ -123,11 +123,11 @@ class ArticleList extends \ContentElement
 					FROM
 						tl_article
 					WHERE " . 
-						(!$this->Input->cookie('FE_PREVIEW') ? "`published`='1' AND " : "") . " `pid`=? 
+						(!\Input::cookie('FE_PREVIEW') ? "`published`='1' AND" : "") . " `pid`=? 
 					ORDER BY `sorting`";
 
 				$this->import('FrontendUser', 'User');
-
+				
 				while ($objPages->next())
 				{
 					if ($this->article_list_hidden || ($objPages->hide != '1') || in_array($objPages->id, $selectedPages))
@@ -152,7 +152,7 @@ class ArticleList extends \ContentElement
 							}
 						}
 
-						$objArticles = $this->Database->prepare($sql)->execute($objPages->id);
+						$objArticles = \Database::getInstance()->prepare($sql)->execute($objPages->id);
 
 						if ($objArticles->numRows > 0)
 						{
@@ -186,7 +186,14 @@ class ArticleList extends \ContentElement
 								{
 									if ($objArticles->addImage && $objArticles->singleSRC != '')
 									{
-										$objModel = \FilesModel::findByPk($objArticles->singleSRC);
+										if (version_compare(VERSION, '3.2', '>='))
+										{
+											$objModel = \FilesModel::findByUuid($this->singleSRC);
+										}
+										else
+										{
+											$objModel = \FilesModel::findByPk($objArticles->singleSRC);
+										}
 																	
 										if ($objModel !== null && is_file(TL_ROOT . '/' . $objModel->path))
 										{
@@ -240,10 +247,11 @@ class ArticleList extends \ContentElement
 									'teaser'		=> ($this->article_list_teaser ? $objArticles->teaser : ''),
 									'teaser_cssID'	=> $arrTeaserCssID[0],
 									'teaser_class'	=> $arrTeaserCssID[1],
-									'link'			=> $this->generateFrontendUrl($objPages->row(), $link),
+									'link'			=> $this->generateFrontendUrl($objPages->row(), $link, null, true),
 									'protected'		=> $isProtected,
 									'image'			=> $imageTemplate,
-									'addImage'		=> $addImage
+									'addImage'		=> $addImage,
+									'row'			=> $objArticles->row()
 								);
 							}
 							
@@ -251,7 +259,7 @@ class ArticleList extends \ContentElement
 							(
 								'name' => $objPages->title,
 								'title' => ($objPages->pageTitle != '' ? $objPages->pageTitle : $objPages->title),
-								'link' => $this->generateFrontendUrl($objPages->row()),
+								'link' => $this->generateFrontendUrl($objPages->row(), null, null, true),
 								'protected' => $protectedPage,
 								'articles' => $articles,
 								'level' => (isset($this->idLevels[$objPages->id]) ? $this->idLevels[$objPages->id] : 0),
@@ -266,7 +274,7 @@ class ArticleList extends \ContentElement
 		}
 		elseif (TL_MODE == 'FE')
 		{
-			$this->log(sprintf('No articles for ID %d (%s) found.', $objPage->id, $objPage->title), 'ArticleList', TL_NOTICE);
+			$this->log(sprintf('No articles for ID %d (%s) found.', $objPage->id, $objPage->title), 'ArticleList', TL_ERROR);
 		}
 
 		if ((count($pages) > 0) && (count($articleListPages) > 0))
@@ -306,7 +314,7 @@ class ArticleList extends \ContentElement
 	{
 		$pageArray = array();
 
-		$objPages = $this->Database->prepare("
+		$objPages = \Database::getInstance()->prepare("
 			SELECT
 				`id`
 			FROM
@@ -314,7 +322,7 @@ class ArticleList extends \ContentElement
 			WHERE
 				`pid`=? AND
 				`type`='regular'
-				".(!$this->Input->cookie('FE_PREVIEW') ? " AND `published`='1' " : "")."
+				".(!\Input::cookie('FE_PREVIEW') ? " AND `published`='1' " : "")."
 			ORDER BY
 				`sorting`
 		")->execute($pageId);
@@ -340,8 +348,8 @@ class ArticleList extends \ContentElement
  * Class SubTemplate
  *
  * Template class for zArticleImage or teaserimages extension.
- * @copyright  Mario Müller 2012
- * @author     Mario Müller <http://www.lingo4u.de>
+ * @copyright  Mario Müller 2016
+ * @author     Mario Müller https://www.lingolia.com/
  * @package    ce_article_list
  */
 class SubTemplate extends \Template

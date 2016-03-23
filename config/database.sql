@@ -18,7 +18,7 @@ CREATE TABLE `tl_content` (
   `article_list_recursive` char(1) NOT NULL default '',
   `article_list_hidden` char(1) NOT NULL default '1',
   `article_list_pages` blob NULL,
-  `article_list_page_link` char(1) NOT NULL default '',
+  `article_list_page_link` char(1) NOT NULL default '1',
   `article_list_page_headline` char(1) NOT NULL default '1',
   `article_list_teaser` char(1) NOT NULL default '1'
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;

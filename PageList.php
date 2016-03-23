@@ -29,7 +29,6 @@
 
 class PageList extends \ContentElement
 {
-
 	/**
 	 * Template
 	 * @var string
@@ -158,7 +157,7 @@ class PageList extends \ContentElement
 		}
 		elseif (TL_MODE == 'FE')
 		{
-			$this->log(sprintf('No pages for ID %d (%s) found.', $objPage->id, $objPage->pageTitle), 'PageList', TL_NOTICE);
+			$this->log(sprintf('No pages for ID %d (%s) found.', $objPage->id, $objPage->pageTitle), 'PageList', TL_ERROR);
 		}
 
 		if ((count($pages) > 0) && (count($articleListPages) > 0))
