@@ -1,33 +1,20 @@
-<?php if (!defined('TL_ROOT')) die('You can not access this file directly!');
+<?php
+
+namespace fortytwo\CeArticleList;
+
+
+use Contao\ArticleModel;
+use Contao\ContentElement;
+use Contao\Database;
 
 /**
- * Contao Open Source CMS
- * Copyright (C) 2005-2010 Leo Feyer
- *
- * Formerly known as TYPOlight Open Source CMS.
- *
- * This program is free software: you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation, either
- * version 3 of the License, or (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- * 
- * You should have received a copy of the GNU Lesser General Public
- * License along with this program. If not, please visit the Free
- * Software Foundation website at <http://www.gnu.org/licenses/>.
- *
- * PHP version 5
- * @copyright  Lingo4you 2014
+ * @copyright  Lingo4you 2018
  * @author     Mario Müller <http://www.lingolia.com/>
  * @package    ArticleList
  * @license    http://opensource.org/licenses/lgpl-3.0.html
  */
 
-class PageList extends \ContentElement
+class PageList extends ContentElement
 {
 	/**
 	 * Template
@@ -67,7 +54,7 @@ class PageList extends \ContentElement
 		}
 		else
 		{
-			$objArticle = $this->Database->prepare("SELECT `pid` FROM `tl_article` WHERE `id`=?")->limit(1)->execute($this->pid);
+            $objArticle = ArticleModel::findByPid($this->pid);
 
 			if ($objArticle->next())
 			{
@@ -90,7 +77,7 @@ class PageList extends \ContentElement
 
 		if (count($articleListPages))
 		{
-			$objPages = $this->Database->prepare("
+			$objPages = Database::getInstance()->prepare("
 			SELECT
 				`id`,
 				`alias`,
@@ -169,9 +156,12 @@ class PageList extends \ContentElement
 	}
 
 
-	/**
-	 * Helper function for usort
-	 */
+    /**
+     * Helper function for usort
+     * @param $a
+     * @param $b
+     * @return int
+     */
 	protected function pageSort($a, $b)
 	{
 		if ($a['sort'] == $b['sort']) {
@@ -187,7 +177,7 @@ class PageList extends \ContentElement
 	{
 		$pageArray = array();
 
-		$objPages = $this->Database->prepare("
+		$objPages = Database::getInstance()->prepare("
 			SELECT
 				`id`
 			FROM
@@ -213,7 +203,4 @@ class PageList extends \ContentElement
 
 		return $pageArray;
 	}
-
 }
-
-?>

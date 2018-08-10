@@ -1,33 +1,21 @@
-<?php if (!defined('TL_ROOT')) die('You can not access this file directly!');
+<?php
+
+namespace fortytwo\CeArticleList;
+
+use Contao\ArticleModel;
+use Contao\ContentElement;
+use Contao\Database;
+use Contao\FilesModel;
+use Contao\Template;
 
 /**
- * Contao Open Source CMS
- * Copyright (C) 2005-2010 Leo Feyer
- *
- * Formerly known as TYPOlight Open Source CMS.
- *
- * This program is free software: you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation, either
- * version 3 of the License, or (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- * 
- * You should have received a copy of the GNU Lesser General Public
- * License along with this program. If not, please visit the Free
- * Software Foundation website at <http://www.gnu.org/licenses/>.
- *
- * PHP version 5
- * @copyright  Lingo4you 2016
+ * @copyright  Lingo4you 2018
  * @author     Mario Müller https://www.lingolia.com/
  * @package    ArticleList
  * @license    http://opensource.org/licenses/lgpl-3.0.html
  */
 
-class ArticleList extends \ContentElement
+class ArticleList extends ContentElement
 {
 
 	/**
@@ -69,9 +57,8 @@ class ArticleList extends \ContentElement
 		}
 		else
 		{
-			$objArticle = \Database::getInstance()->prepare("SELECT `pid` FROM `tl_article` WHERE `id`=?")
-				->execute($this->pid);
-		
+            $objArticle = ArticleModel::findByPid($this->pid);
+
 			if ($objArticle->next())
 			{
 				$pageId = $objArticle->pid;
@@ -152,7 +139,7 @@ class ArticleList extends \ContentElement
 							}
 						}
 
-						$objArticles = \Database::getInstance()->prepare($sql)->execute($objPages->id);
+						$objArticles = Database::getInstance()->prepare($sql)->execute($objPages->id);
 
 						if ($objArticles->numRows > 0)
 						{
@@ -188,11 +175,11 @@ class ArticleList extends \ContentElement
 									{
 										if (version_compare(VERSION, '3.2', '>='))
 										{
-											$objModel = \FilesModel::findByUuid($this->singleSRC);
+											$objModel = FilesModel::findByUuid($this->singleSRC);
 										}
 										else
 										{
-											$objModel = \FilesModel::findByPk($objArticles->singleSRC);
+											$objModel = FilesModel::findByPk($objArticles->singleSRC);
 										}
 																	
 										if ($objModel !== null && is_file(TL_ROOT . '/' . $objModel->path))
@@ -314,7 +301,7 @@ class ArticleList extends \ContentElement
 	{
 		$pageArray = array();
 
-		$objPages = \Database::getInstance()->prepare("
+		$objPages = Database::getInstance()->prepare("
 			SELECT
 				`id`
 			FROM
@@ -352,18 +339,14 @@ class ArticleList extends \ContentElement
  * @author     Mario Müller https://www.lingolia.com/
  * @package    ce_article_list
  */
-class SubTemplate extends \Template
+class SubTemplate extends Template
 {
-	/**
-	 * Create a new template instance
-	 * @param string
-	 * @param string
-	 * @throws Exception
-	 */
+    /**
+     * SubTemplate constructor.
+     * Create a new template instance
+     */
 	public function __construct()
 	{
 		parent::__construct('article_list_image');
 	}
 }
-
-?>

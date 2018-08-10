@@ -10,14 +10,21 @@
  * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
  */
 
+/**
+ * Register the namespaces
+ */
+ClassLoader::addNamespaces(array
+(
+    'fortytwo\CeArticleList',
+));
 
 /**
  * Register the classes
  */
 ClassLoader::addClasses(array
 (
-	'ArticleList' => 'system/modules/ce_article_list/elements/ArticleList.php',
-	'PageList'    => 'system/modules/ce_article_list/elements/PageList.php',
+	'fortytwo\CeArticleList\ArticleList' => 'system/modules/ce_article_list/elements/ArticleList.php',
+	'fortytwo\CeArticleList\PageList'    => 'system/modules/ce_article_list/elements/PageList.php',
 ));
 
 
