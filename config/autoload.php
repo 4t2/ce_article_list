@@ -16,8 +16,8 @@
  */
 ClassLoader::addClasses(array
 (
-	'ArticleList' => 'system/modules/ce_article_list/ArticleList.php',
-	'PageList'    => 'system/modules/ce_article_list/PageList.php',
+	'ArticleList' => 'system/modules/ce_article_list/elements/ArticleList.php',
+	'PageList'    => 'system/modules/ce_article_list/elements/PageList.php',
 ));
 
 
