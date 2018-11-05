@@ -1,0 +1,34 @@
+{
+  "name": "4t2/ce_article_list",
+  "description": "ausgewälte Artikel oder rekursive der Unterseiten als Link-Liste darstellen",
+  "keywords": ["contao", "article", "link", "list"],
+  "type": "contao-module",
+  "homepage": "https://github.com/4t2/ce_article_list",
+  "license": "GPL-3.0+",
+  "authors":[
+    {
+      "name":"Mario Müller",
+      "homepage":"http://www.lingo4u.de",
+      "role":"Developer"
+    }
+  ],
+  "support":{
+    "issues":"https://github.com/4t2/ce_article_list/issues",
+    "source":"https://github.com/4t2/ce_article_list"
+  },
+  "require": {
+    "php": ">=5.6",
+    "contao/core-bundle": "~3.5 || ~4.4",
+    "contao-community-alliance/composer-plugin":"~2.4 || ~3.0"
+  },
+  "replace": {
+    "contao-legacy/ce_article_list": "self.version"
+  },
+  "extra": {
+    "contao": {
+      "sources": {
+        "": "system/modules/ce_article_list"
+      }
+    }
+  }
+}
